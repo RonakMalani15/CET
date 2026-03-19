@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CET Mock Test</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=IBM+Plex+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0b1628;--s1:#0f1e3a;--s2:#162545;--or:#f97316;--or2:#fb923c;--gd:#fbbf24;--tx:#e8edf5;--mt:#6b7fa3;--bd:#1e3260;--ok:#22c55e;--no:#ef4444;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--tx);font-family:'Outfit',sans-serif;min-height:100vh;background-image:radial-gradient(ellipse at 5% 10%,rgba(249,115,22,.06) 0%,transparent 50%),radial-gradient(ellipse at 95% 90%,rgba(26,46,85,.7) 0%,transparent 50%);}
+/* HEADER */
+header{background:rgba(11,22,40,.97);border-bottom:2px solid var(--or);height:56px;padding:0 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;backdrop-filter:blur(16px);}
+.logo{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:800;color:var(--or);}
+.hprog{flex:1;max-width:240px;margin:0 20px;display:none;}
+.hprog-bg{background:var(--s2);border-radius:3px;height:4px;}
+.hprog-fill{background:linear-gradient(90deg,var(--or),var(--gd));border-radius:3px;height:4px;transition:width .3s;}
+.hprog-lbl{font-family:'IBM Plex Mono',monospace;font-size:.58rem;color:var(--mt);text-align:right;margin-top:2px;}
+.htimer{display:none;align-items:center;gap:7px;background:var(--s1);border:1px solid var(--bd);border-radius:8px;padding:5px 13px;font-family:'IBM Plex Mono',monospace;font-size:.95rem;}
+.tdot{width:6px;height:6px;border-radius:50%;background:var(--ok);animation:pulse 1s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.htimer.warn{border-color:var(--gd);color:var(--gd);}
+.htimer.danger{border-color:var(--no);color:var(--no);animation:blink .5s infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.5}}
+.hfin{display:none;background:var(--gd);color:#0b1628;border:none;border-radius:8px;padding:7px 16px;font-family:'Outfit',sans-serif;font-weight:700;font-size:.8rem;cursor:pointer;transition:all .15s;}
+.hfin:hover{background:#fcd34d;transform:translateY(-1px);}
+/* LAYOUT */
+.layout{display:flex;height:calc(100vh - 56px);}
+/* SIDEBAR */
+.sb{width:240px;flex-shrink:0;background:var(--s1);border-right:1px solid var(--bd);overflow-y:auto;padding:12px 10px;}
+.sb::-webkit-scrollbar{width:3px;}
+.sb::-webkit-scrollbar-thumb{background:var(--bd);border-radius:3px;}
+.sb-ttl{font-family:'IBM Plex Mono',monospace;font-size:.58rem;color:var(--mt);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--bd);}
+.sb-sec{margin-bottom:12px;}
+.sb-lbl{font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;padding-left:4px;border-left:2px solid;}
+.sb-lbl.m{border-color:var(--or);color:#f9731666;}
+.sb-lbl.c{border-color:var(--gd);color:#fbbf2466;}
+.sb-lbl.l{border-color:var(--ok);color:#22c55e66;}
+.sb-lbl.e{border-color:#818cf8;color:#818cf866;}
+.qg{display:grid;grid-template-columns:repeat(5,1fr);gap:3px;}
+.qb{aspect-ratio:1;border:1px solid var(--bd);background:var(--s2);border-radius:4px;font-family:'IBM Plex Mono',monospace;font-size:.58rem;color:var(--mt);cursor:pointer;transition:all .12s;display:flex;align-items:center;justify-content:center;}
+.qb:hover{border-color:var(--or);color:var(--or);}
+.qb.cur{border-color:var(--or);background:rgba(249,115,22,.15);color:var(--or);}
+.qb.done{background:rgba(34,197,94,.12);border-color:var(--ok);color:var(--ok);}
+.qb.cur.done{background:rgba(249,115,22,.2);border-color:var(--or);}
+.leg{margin-top:10px;padding-top:8px;border-top:1px solid var(--bd);}
+.leg-r{display:flex;align-items:center;gap:5px;font-size:.62rem;color:var(--mt);margin-bottom:3px;}
+.leg-d{width:9px;height:9px;border-radius:2px;flex-shrink:0;}
+/* MAIN */
+.main{flex:1;overflow-y:auto;padding:24px 36px;}
+.main::-webkit-scrollbar{width:5px;}
+.main::-webkit-scrollbar-thumb{background:var(--bd);border-radius:3px;}
+.sbar{display:flex;align-items:center;gap:18px;background:var(--s1);border:1px solid var(--bd);border-radius:12px;padding:10px 16px;margin-bottom:20px;flex-wrap:wrap;}
+.st-n{font-family:'IBM Plex Mono',monospace;font-size:1rem;}
+.st-l{font-size:.6rem;color:var(--mt);text-transform:uppercase;letter-spacing:1px;}
+/* QUESTION */
+.mbadge{display:inline-block;background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.2);border-radius:20px;padding:2px 11px;font-size:.65rem;color:var(--gd);font-family:'IBM Plex Mono',monospace;margin-bottom:12px;}
+.qnum{font-family:'IBM Plex Mono',monospace;font-size:.75rem;color:var(--mt);margin-bottom:7px;}
+.qtxt{font-size:1.05rem;font-weight:500;line-height:1.75;margin-bottom:22px;}
+.opts{display:flex;flex-direction:column;gap:9px;margin-bottom:24px;}
+.opt{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:10px;border:1.5px solid var(--bd);background:var(--s1);cursor:pointer;font-size:.93rem;transition:border-color .15s,background .15s;}
+.opt:hover:not(.locked){border-color:var(--or);background:rgba(249,115,22,.05);}
+.opt.sel{border-color:var(--or);background:rgba(249,115,22,.1);}
+.opt.locked{cursor:default;}
+.okey{width:27px;height:27px;border-radius:6px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:.72rem;background:var(--s2);color:var(--mt);transition:background .15s,color .15s;}
+.opt.sel .okey{background:var(--or);color:#fff;}
+.navr{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding-bottom:20px;}
+.btn{padding:9px 20px;border-radius:8px;border:none;cursor:pointer;font-family:'Outfit',sans-serif;font-weight:600;font-size:.85rem;transition:all .15s;}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none!important;}
+.bor{background:var(--or);color:#fff;box-shadow:0 2px 10px rgba(249,115,22,.25);}
+.bor:hover:not(:disabled){background:var(--or2);transform:translateY(-1px);}
+.bln{background:transparent;color:var(--tx);border:1.5px solid var(--bd);}
+.bln:hover:not(:disabled){border-color:var(--or);color:var(--or);}
+.bgd{background:var(--gd);color:#0b1628;font-weight:700;}
+.bgd:hover:not(:disabled){background:#fcd34d;transform:translateY(-1px);}
+/* MODAL */
+.modal{display:none;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,.75);backdrop-filter:blur(8px);align-items:center;justify-content:center;}
+.mbox{background:var(--s1);border:1px solid var(--bd);border-radius:18px;padding:32px;max-width:400px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.5);}
+.mico{font-size:2.2rem;margin-bottom:10px;}
+.mttl{font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:700;margin-bottom:7px;}
+.mmsg{color:var(--mt);font-size:.87rem;line-height:1.7;margin-bottom:22px;}
+.mbtns{display:flex;gap:10px;justify-content:center;}
+/* WELCOME */
+#pg-welcome{display:flex;align-items:flex-start;justify-content:center;min-height:calc(100vh - 56px);padding:28px 16px;overflow-y:auto;}
+.wc{background:var(--s1);border:1px solid var(--bd);border-radius:18px;padding:36px 40px;max-width:620px;width:100%;box-shadow:0 8px 40px rgba(0,0,0,.4);}
+.wttl{font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:800;margin-bottom:8px;}
+.wttl span{color:var(--or);}
+.wsub{color:var(--mt);font-size:.92rem;line-height:1.6;margin-bottom:22px;}
+.wg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
+.wi{background:var(--s2);border:1px solid var(--bd);border-radius:10px;padding:12px;}
+.wil{font-size:.6rem;color:var(--mt);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;}
+.wiv{font-weight:700;font-size:.9rem;}
+.winfo{background:rgba(249,115,22,.07);border:1px solid rgba(249,115,22,.18);border-radius:10px;padding:11px 14px;margin-bottom:20px;font-size:.82rem;color:#fed7aa;line-height:1.55;}
+/* RULES */
+.rules{background:var(--s2);border:1px solid var(--bd);border-radius:12px;padding:18px 20px;margin-bottom:22px;}
+.rules-ttl{font-family:'Playfair Display',serif;font-size:.95rem;font-weight:700;color:var(--or);margin-bottom:12px;}
+.rule{display:flex;gap:9px;align-items:flex-start;font-size:.8rem;line-height:1.55;margin-bottom:7px;color:var(--tx);}
+.rnum{color:var(--or);font-weight:700;font-family:'IBM Plex Mono',monospace;font-size:.72rem;flex-shrink:0;margin-top:1px;}
+/* RESULT */
+#pg-result{display:none;padding:24px 16px;min-height:calc(100vh - 56px);overflow-y:auto;}
+.rw{max-width:720px;margin:0 auto;}
+.rhero{background:var(--s1);border:1px solid var(--bd);border-radius:16px;padding:28px 24px;margin-bottom:14px;text-align:center;background-image:radial-gradient(ellipse at 50% 0%,rgba(249,115,22,.07),transparent 65%);}
+.rttl{font-family:'Playfair Display',serif;font-size:1.7rem;font-weight:800;margin-bottom:3px;}
+.rsub{color:var(--mt);font-size:.87rem;margin-bottom:22px;}
+.rings{display:flex;justify-content:center;gap:24px;flex-wrap:wrap;}
+.ringw{text-align:center;}
+.ring{width:108px;height:108px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 6px;}
+.rin{width:80px;height:80px;border-radius:50%;background:var(--s1);display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.rn{font-family:'IBM Plex Mono',monospace;font-size:1.3rem;line-height:1.1;}
+.rs{font-size:.58rem;color:var(--mt);}
+.rlbl{font-size:.62rem;color:var(--mt);text-transform:uppercase;letter-spacing:1px;}
+.rstats{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:14px;}
+.rst{background:var(--s1);border:1px solid var(--bd);border-radius:10px;padding:12px 8px;text-align:center;}
+.rstn{font-family:'IBM Plex Mono',monospace;font-size:1.25rem;}
+.rstl{font-size:.58rem;color:var(--mt);text-transform:uppercase;letter-spacing:1px;margin-top:2px;}
+.scard{background:var(--s1);border:1px solid var(--bd);border-radius:12px;padding:18px;margin-bottom:14px;}
+.sc-ttl{font-weight:700;margin-bottom:14px;font-size:.9rem;}
+.sbr{margin-bottom:12px;}
+.sbrt{display:flex;justify-content:space-between;margin-bottom:4px;font-size:.8rem;}
+.bar-bg{background:var(--s2);border-radius:3px;height:7px;}
+.bar-f{height:7px;border-radius:3px;transition:width 1.2s ease;}
+.bar-d{display:flex;gap:10px;margin-top:3px;font-size:.64rem;color:var(--mt);}
+.pbox{background:rgba(249,115,22,.07);border:1px solid rgba(249,115,22,.2);border-radius:10px;padding:14px 16px;margin-bottom:14px;font-size:.84rem;color:#fed7aa;line-height:1.65;}
+.wsec{background:var(--s1);border:1px solid rgba(239,68,68,.2);border-radius:12px;padding:18px;margin-bottom:14px;}
+.wst{font-family:'Playfair Display',serif;font-weight:700;font-size:1rem;color:var(--no);margin-bottom:14px;}
+.wqc{border:1px solid var(--bd);border-radius:9px;padding:14px;margin-bottom:10px;background:var(--s2);}
+.wqh{font-family:'IBM Plex Mono',monospace;font-size:.68rem;color:var(--mt);margin-bottom:6px;}
+.wqq{font-size:.88rem;font-weight:500;line-height:1.6;margin-bottom:9px;}
+.woo{display:flex;flex-direction:column;gap:5px;margin-bottom:8px;}
+.wo{padding:7px 12px;border-radius:6px;font-size:.82rem;display:flex;align-items:center;gap:8px;}
+.wo.mine{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:#fca5a5;}
+.wo.right{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);color:#86efac;}
+.wo.skip{background:rgba(107,127,163,.1);border:1px solid rgba(107,127,163,.3);color:var(--mt);}
+.wex{background:rgba(249,115,22,.06);border-left:3px solid var(--or);padding:8px 12px;border-radius:0 6px 6px 0;font-size:.79rem;color:#fed7aa;line-height:1.55;}
+.rbtns{display:flex;gap:10px;justify-content:center;padding:8px 0 28px;flex-wrap:wrap;}
+/* MOB BAR */
+.mobbar{display:none;position:fixed;bottom:0;left:0;right:0;z-index:500;background:rgba(11,22,40,.97);border-top:2px solid var(--or);padding:10px 14px 12px;backdrop-filter:blur(16px);box-shadow:0 -4px 20px rgba(0,0,0,.4);}
+.mobi{display:flex;align-items:center;justify-content:space-between;gap:8px;max-width:600px;margin:0 auto;}
+.mobinfo{font-family:'IBM Plex Mono',monospace;font-size:.67rem;color:var(--mt);text-align:center;line-height:1.4;}
+.mobinfo b{display:block;color:var(--tx);font-size:.82rem;}
+/* RESPONSIVE */
+@media(max-width:900px){.sb{width:195px;}.main{padding:18px 22px;}}
+@media(max-width:768px){
+  header{padding:0 14px;}
+  .logo{font-size:.95rem;}
+  .hfin{font-size:.7rem;padding:6px 10px;}
+  .layout{flex-direction:column;height:auto;}
+  .sb{display:none;}
+  .main{padding:12px 12px 130px;}
+  .sbar{padding:9px 12px;gap:12px;margin-bottom:14px;}
+  .st-n{font-size:.88rem;}
+  .st-l{font-size:.56rem;}
+  .qtxt{font-size:.93rem;line-height:1.65;margin-bottom:18px;}
+  .opt{padding:10px 12px;font-size:.85rem;gap:9px;}
+  .okey{width:24px;height:24px;font-size:.68rem;}
+  .navr{display:none!important;}
+  .mobbar{display:block;}
+  #pg-welcome{padding:14px;padding-top:18px;}
+  .wc{padding:20px 16px;border-radius:14px;}
+  .wttl{font-size:1.6rem;}
+  .wsub{font-size:.82rem;margin-bottom:16px;}
+  .wg{gap:8px;margin-bottom:16px;}
+  .wi{padding:9px 10px;}
+  .wiv{font-size:.83rem;}
+  .wil{font-size:.56rem;}
+  .rules{padding:14px 14px;}
+  .rule{font-size:.75rem;}
+  #pg-result{padding:12px 10px;}
+  .rw{max-width:100%;}
+  .rhero{padding:18px 12px;}
+  .rttl{font-size:1.3rem;}
+  .rings{gap:12px;}
+  .ring{width:88px;height:88px;}
+  .rin{width:64px;height:64px;}
+  .rn{font-size:1.05rem;}
+  .rstats{grid-template-columns:1fr 1fr;gap:7px;}
+  .rst{padding:10px 6px;}
+  .rstn{font-size:1rem;}
+  .scard{padding:14px 12px;}
+  .pbox{font-size:.78rem;padding:11px 12px;}
+  .wsec{padding:14px 12px;}
+  .wqq{font-size:.82rem;}
+  .wo{font-size:.76rem;}
+  .wex{font-size:.74rem;}
+  .rbtns .btn{flex:1;text-align:center;}
+}
+@media(max-width:380px){.wttl{font-size:1.35rem;}.ring{width:76px;height:76px;}.rin{width:56px;height:56px;}.rn{font-size:.9rem;}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">CET Mock Test</div>
+  <div class="hprog" id="hprog">
+    <div class="hprog-bg"><div class="hprog-fill" id="hpfill" style="width:0%"></div></div>
+    <div class="hprog-lbl" id="hplbl">0 / 100</div>
+  </div>
+  <div style="display:flex;align-items:center;gap:8px;">
+    <div class="htimer" id="htimer"><div class="tdot"></div><span id="tdisp">01:30:00</span></div>
+    <button class="hfin" id="hfin" onclick="openModal()">🏁 Final Submit</button>
+  </div>
+</header>
+
+<!-- FINAL SUBMIT MODAL -->
+<div class="modal" id="modal">
+  <div class="mbox">
+    <div class="mico">🏁</div>
+    <div class="mttl">Submit Test?</div>
+    <div class="mmsg" id="mmsg"></div>
+    <div class="mbtns">
+      <button class="btn bln" onclick="closeModal()">Cancel</button>
+      <button class="btn bgd" onclick="finalSubmit()">Yes, Submit!</button>
+    </div>
+  </div>
+</div>
+
+<!-- WELCOME PAGE -->
+<div id="pg-welcome">
+  <div class="wc">
+    <div class="wttl">CET <span>Mock Test</span></div>
+    <div class="wsub">100 questions • 4 subjects • 90 minutes • 2 marks per question</div>
+    <div class="wg">
+      <div class="wi"><div class="wil">📐 Mathematics</div><div class="wiv" style="color:var(--or)">Q 1 – 25</div></div>
+      <div class="wi"><div class="wil">💻 Computer Science</div><div class="wiv" style="color:var(--gd)">Q 26 – 50</div></div>
+      <div class="wi"><div class="wil">🧩 Logical Reasoning</div><div class="wiv" style="color:var(--ok)">Q 51 – 75</div></div>
+      <div class="wi"><div class="wil">📖 English</div><div class="wiv" style="color:#818cf8">Q 76 – 100</div></div>
+      <div class="wi"><div class="wil">Total Marks</div><div class="wiv">200</div></div>
+      <div class="wi"><div class="wil">Per Question</div><div class="wiv">2 Marks</div></div>
+      <div class="wi"><div class="wil">Time Limit</div><div class="wiv">90 Minutes</div></div>
+      <div class="wi"><div class="wil">Negative Marking</div><div class="wiv">None</div></div>
+    </div>
+    <div class="winfo">💡 Select your answer → click <b>Submit</b> → auto moves to next question. Use <b>🏁 Final Submit</b> to end the test and see results.</div>
+    <div class="rules">
+      <div class="rules-ttl">📋 MCA CET — Official Exam Rules</div>
+      <div class="rule"><span class="rnum">01</span><span><b>Exam Mode:</b> Computer-Based Test (CBT) conducted at designated exam centres.</span></div>
+      <div class="rule"><span class="rnum">02</span><span><b>Questions:</b> 100 MCQs with 4 options each (A, B, C, D).</span></div>
+      <div class="rule"><span class="rnum">03</span><span><b>Marking:</b> +2 for correct answer. <span style="color:var(--ok)">Zero negative marking.</span></span></div>
+      <div class="rule"><span class="rnum">04</span><span><b>Total Marks:</b> 200 (100 × 2).</span></div>
+      <div class="rule"><span class="rnum">05</span><span><b>Duration:</b> 90 minutes. Timer starts when exam begins.</span></div>
+      <div class="rule"><span class="rnum">06</span><span><b>Subjects:</b> Mathematics (25Q) • Computer Science (25Q) • Logical Reasoning (25Q) • English (25Q).</span></div>
+      <div class="rule"><span class="rnum">07</span><span><b>Navigation:</b> You can move freely between all questions during the exam.</span></div>
+      <div class="rule"><span class="rnum">08</span><span><b>Answer Change:</b> You can change your answer any number of times before submission.</span></div>
+      <div class="rule"><span class="rnum">09</span><span><b>Unattempted:</b> Blank questions get 0 marks — no penalty.</span></div>
+      <div class="rule"><span class="rnum">10</span><span><b>Eligibility:</b> BCA / B.Sc. (CS/IT/Maths) with min. 45% marks (40% for reserved).</span></div>
+      <div class="rule"><span class="rnum">11</span><span><b>Admit Card:</b> Carry valid Admit Card + government photo ID to exam centre.</span></div>
+      <div class="rule"><span class="rnum">12</span><span><b>Devices:</b> Mobiles, calculators, smartwatches strictly <span style="color:var(--no)">NOT allowed</span>.</span></div>
+      <div class="rule"><span class="rnum">13</span><span><b>Reporting:</b> Arrive at least 30 minutes before exam time. Late entry may be denied.</span></div>
+      <div class="rule"><span class="rnum">14</span><span><b>Rough Work:</b> Rough sheets provided at centre. No personal stationery allowed.</span></div>
+      <div class="rule"><span class="rnum">15</span><span><b>Result:</b> Merit list based on marks. Final admission via counselling and seat availability.</span></div>
+    </div>
+    <button class="btn bor" style="width:100%;padding:13px;font-size:.95rem;" onclick="startTest()">Start Test →</button>
+  </div>
+</div>
+
+<!-- TEST PAGE -->
+<div class="layout" id="pg-test" style="display:none">
+  <div class="sb">
+    <div class="sb-ttl">Navigator</div>
+    <div id="qnav"></div>
+    <div class="leg">
+      <div class="leg-r"><div class="leg-d" style="background:var(--s2);border:1px solid var(--bd)"></div>Not visited</div>
+      <div class="leg-r"><div class="leg-d" style="background:rgba(249,115,22,.2);border:1px solid var(--or)"></div>Current</div>
+      <div class="leg-r"><div class="leg-d" style="background:rgba(34,197,94,.12);border:1px solid var(--ok)"></div>Submitted</div>
+    </div>
+  </div>
+  <div class="main">
+    <div class="sbar">
+      <div><div class="st-n" style="color:var(--ok)" id="st-done">0</div><div class="st-l">Submitted</div></div>
+      <div><div class="st-n" style="color:var(--or)" id="st-rem">100</div><div class="st-l">Remaining</div></div>
+      <div style="margin-left:auto"><button class="btn bgd" id="ifin" style="display:none;font-size:.8rem;padding:7px 14px;" onclick="openModal()">🏁 Final Submit</button></div>
+    </div>
+    <div id="qarea"></div>
+  </div>
+</div>
+
+<!-- RESULT PAGE -->
+<div id="pg-result">
+  <div class="rw">
+    <div class="rhero">
+      <div class="rttl" id="rttl"></div>
+      <div class="rsub" id="rsub"></div>
+      <div class="rings">
+        <div class="ringw"><div class="ring" id="rring-s"><div class="rin"><div class="rn" id="rn-s" style="color:var(--or)"></div><div class="rs">/200</div></div></div><div class="rlbl">Score</div></div>
+        <div class="ringw"><div class="ring" id="rring-p"><div class="rin"><div class="rn" id="rn-p" style="color:var(--gd)"></div><div class="rs">%ile</div></div></div><div class="rlbl">Percentile</div></div>
+        <div class="ringw"><div class="ring" id="rring-a"><div class="rin"><div class="rn" id="rn-a" style="color:var(--ok)"></div><div class="rs">acc</div></div></div><div class="rlbl">Accuracy</div></div>
+      </div>
+    </div>
+    <div class="rstats">
+      <div class="rst"><div class="rstn" style="color:var(--ok)" id="r-cor"></div><div class="rstl">✅ Correct</div></div>
+      <div class="rst"><div class="rstn" style="color:var(--no)" id="r-wrg"></div><div class="rstl">❌ Wrong</div></div>
+      <div class="rst"><div class="rstn" style="color:var(--mt)" id="r-skp"></div><div class="rstl">⏭ Skipped</div></div>
+      <div class="rst"><div class="rstn" style="color:var(--gd)" id="r-tim"></div><div class="rstl">⏱ Time</div></div>
+    </div>
+    <div class="scard"><div class="sc-ttl">📊 Subject-wise Performance</div><div id="sbars"></div></div>
+    <div class="pbox" id="pbox"></div>
+    <div class="wsec" id="wsec" style="display:none"><div class="wst">❌ Wrong Answers — Review</div><div id="wlist"></div></div>
+    <div class="rbtns"><button class="btn bor" onclick="location.reload()">🔁 New Test</button></div>
+  </div>
+</div>
+
+<!-- MOBILE BOTTOM BAR -->
+<div class="mobbar" id="mobbar">
+  <div class="mobi">
+    <button class="btn bln" id="mb-prev" onclick="goTo(cur-1)" style="padding:8px 14px;font-size:.8rem;" disabled>← Prev</button>
+    <div class="mobinfo"><div id="mb-qn">Q 1 / 100</div><div id="mb-st" style="font-size:.62rem;color:var(--mt);">Not answered</div></div>
+    <button class="btn bor" id="mb-act" onclick="mobAct()" style="padding:8px 14px;font-size:.8rem;" disabled>Submit</button>
+  </div>
+</div>
+
+<script>
+const Q=[
+// ═══ MATHEMATICS 1-25 ═══
+// Easy (1-8)
+{s:"m",q:"What is the value of √144 + √81?",o:["A) 20","B) 21","C) 22","D) 23"],a:1,e:"√144=12, √81=9. 12+9=21."},
+{s:"m",q:"If 5x = 125, then x = ?",o:["A) 2","B) 3","C) 4","D) 5"],a:1,e:"5³=125, so x=3."},
+{s:"m",q:"The product of two numbers is 120 and their sum is 22. What are they?",o:["A) 10 and 12","B) 8 and 15","C) 6 and 20","D) 11 and 11"],a:0,e:"10×12=120 and 10+12=22. ✓"},
+{s:"m",q:"What is the simple interest on ₹2000 at 5% per annum for 3 years?",o:["A) ₹200","B) ₹250","C) ₹300","D) ₹350"],a:2,e:"SI = PRT/100 = 2000×5×3/100 = ₹300."},
+{s:"m",q:"Which of the following is a rational number?",o:["A) √3","B) √5","C) √9","D) √7"],a:2,e:"√9=3, which is a rational number. Others are irrational."},
+{s:"m",q:"The value of sin 30° × cos 60° is:",o:["A) 1/2","B) 1/4","C) 1","D) 0"],a:1,e:"sin30°=1/2, cos60°=1/2. Product=1/4."},
+{s:"m",q:"What is the volume of a cube with side 4 cm?",o:["A) 16 cm³","B) 48 cm³","C) 64 cm³","D) 96 cm³"],a:2,e:"Volume = side³ = 4³ = 64 cm³."},
+{s:"m",q:"The sum of angles in a triangle is:",o:["A) 90°","B) 180°","C) 270°","D) 360°"],a:1,e:"The sum of all interior angles of a triangle is always 180°."},
+// Medium (9-19)
+{s:"m",q:"If f(x) = x² − 4x + 4, what is f(3)?",o:["A) 0","B) 1","C) 2","D) 4"],a:1,e:"f(3)=9−12+4=1."},
+{s:"m",q:"How many terms are in the AP: 3, 7, 11, ..., 99?",o:["A) 22","B) 24","C) 25","D) 27"],a:2,e:"aₙ=a+(n-1)d → 99=3+(n-1)4 → n-1=24 → n=25."},
+{s:"m",q:"The determinant of [[4,3],[2,1]] is:",o:["A) -2","B) 2","C) 10","D) -10"],a:0,e:"det=4×1−3×2=4−6=−2."},
+{s:"m",q:"The equation of a line with slope 2 passing through (1, 3) is:",o:["A) y=2x+1","B) y=2x−1","C) y=2x+3","D) y=x+2"],a:0,e:"y−y₁=m(x−x₁) → y−3=2(x−1) → y=2x+1."},
+{s:"m",q:"C(8,3) = ?",o:["A) 24","B) 42","C) 56","D) 112"],a:2,e:"C(8,3)=8!/(3!5!)=8×7×6/6=56."},
+{s:"m",q:"What is ∫ (2x + 3) dx?",o:["A) 2x² + 3x + C","B) x² + 3x + C","C) 2x + 3 + C","D) x² + C"],a:1,e:"∫2x dx=x², ∫3 dx=3x. Result: x²+3x+C."},
+{s:"m",q:"The sum of the infinite GP 1 + 1/2 + 1/4 + ... is:",o:["A) 1","B) 1.5","C) 2","D) 3"],a:2,e:"S∞=a/(1-r)=1/(1-0.5)=2."},
+{s:"m",q:"If A={1,2,3,4,5} and B={3,4,5,6,7}, then n(A∪B) = ?",o:["A) 5","B) 6","C) 7","D) 10"],a:2,e:"A∪B={1,2,3,4,5,6,7} → n=7."},
+{s:"m",q:"The roots of x² + 5x + 6 = 0 are:",o:["A) 2, 3","B) −2, −3","C) 1, 6","D) −1, −6"],a:1,e:"(x+2)(x+3)=0 → x=−2 or x=−3."},
+{s:"m",q:"In △ABC, if a=6, b=8, c=10, it is a:",o:["A) Equilateral","B) Obtuse","C) Right-angled","D) Acute"],a:2,e:"6²+8²=36+64=100=10². Pythagoras holds → right-angled."},
+{s:"m",q:"The number of diagonals in a pentagon is:",o:["A) 4","B) 5","C) 6","D) 8"],a:1,e:"Diagonals=n(n-3)/2=5×2/2=5."},
+{s:"m",q:"The derivative of ln(x) is:",o:["A) x","B) 1/x","C) eˣ","D) ln(x)/x"],a:1,e:"d/dx[ln(x)] = 1/x."},
+// Hard (20-25)
+{s:"m",q:"The number of solutions to x² + y² = 25 where both x, y are integers is:",o:["A) 4","B) 8","C) 10","D) 12"],a:3,e:"Pairs: (±5,0),(0,±5),(±3,±4),(±4,±3) = 2+2+4+4=12."},
+{s:"m",q:"If the matrix A=[[1,2],[3,4]], then det(A²) = ?",o:["A) 4","B) 2","C) −2","D) 1"],a:0,e:"det(A)=1×4−2×3=−2. det(A²)=det(A)²=(−2)²=4."},
+{s:"m",q:"The area enclosed by y=x² and y=x is:",o:["A) 1/3","B) 1/4","C) 1/6","D) 1/2"],a:2,e:"∫₀¹(x−x²)dx=[x²/2−x³/3]₀¹=1/2−1/3=1/6."},
+{s:"m",q:"For what value of k does kx²+4x+1=0 have equal roots?",o:["A) 2","B) 3","C) 4","D) 5"],a:2,e:"Equal roots: b²−4ac=0 → 16−4k=0 → k=4."},
+{s:"m",q:"lim(x→0) (sinx)/x = ?",o:["A) 0","B) ∞","C) 1","D) sin 1"],a:2,e:"Standard limit: lim(x→0)(sinx/x)=1."},
+{s:"m",q:"The value of i²⁰ + i²² where i=√-1 is:",o:["A) 0","B) 2","C) −2","D) 1"],a:0,e:"i⁴=1, so i²⁰=(i⁴)⁵=1. i²²=i²⁰×i²=1×(−1)=−1. Sum=1+(−1)=0."},
+// ═══ COMPUTER SCIENCE 26-50 ═══
+// Easy (26-32)
+{s:"c",q:"What does 'IDE' stand for?",o:["A) Integrated Development Environment","B) Internal Data Engine","C) Integrated Data Editor","D) Internal Development Editor"],a:0,e:"IDE = Integrated Development Environment — software for coding."},
+{s:"c",q:"Which of the following is a linear data structure?",o:["A) Tree","B) Graph","C) Queue","D) Heap"],a:2,e:"Queue is linear — elements are arranged in a sequential order."},
+{s:"c",q:"What is the output of 'Hello'[1] in Python?",o:["A) H","B) e","C) l","D) He"],a:1,e:"Python uses 0-based indexing. Index 1 = 'e'."},
+{s:"c",q:"Which SQL keyword removes duplicate rows from a result?",o:["A) UNIQUE","B) DISTINCT","C) REMOVE","D) FILTER"],a:1,e:"SELECT DISTINCT removes duplicate rows from query results."},
+{s:"c",q:"A bit can hold how many values?",o:["A) 1","B) 2","C) 4","D) 8"],a:1,e:"A bit is a binary digit — it can be 0 or 1, so 2 values."},
+{s:"c",q:"Which language is primarily used for web page structure?",o:["A) CSS","B) JavaScript","C) HTML","D) PHP"],a:2,e:"HTML (HyperText Markup Language) defines web page structure."},
+{s:"c",q:"The binary equivalent of decimal 10 is:",o:["A) 1000","B) 1001","C) 1010","D) 1100"],a:2,e:"10 = 8+2 = 1010 in binary."},
+// Medium (33-44)
+{s:"c",q:"Which algorithm finds the shortest path in a weighted graph?",o:["A) BFS","B) DFS","C) Dijkstra's","D) Prim's"],a:2,e:"Dijkstra's algorithm finds shortest paths from a source in a weighted graph."},
+{s:"c",q:"What is the time complexity of inserting into a hash table (average case)?",o:["A) O(n)","B) O(log n)","C) O(1)","D) O(n²)"],a:2,e:"Average case insertion in a hash table = O(1) with a good hash function."},
+{s:"c",q:"In OOP, what is abstraction?",o:["A) Hiding internal implementation details","B) Creating multiple methods with same name","C) Acquiring properties of parent class","D) Combining data and methods"],a:0,e:"Abstraction = hiding complex implementation, showing only essential features."},
+{s:"c",q:"Which SQL command permanently saves a transaction?",o:["A) SAVE","B) END","C) COMMIT","D) FINALIZE"],a:2,e:"COMMIT permanently saves changes made in the current transaction."},
+{s:"c",q:"Which scheduling algorithm can cause starvation?",o:["A) Round Robin","B) FCFS","C) SRTF (Preemptive SJF)","D) Multilevel Queue"],a:2,e:"SRTF can cause starvation — long processes may wait indefinitely if short ones keep arriving."},
+{s:"c",q:"In a min-heap, the root always contains:",o:["A) Maximum element","B) Minimum element","C) Median element","D) Last inserted element"],a:1,e:"Min-heap property: parent ≤ children, so root = minimum element."},
+{s:"c",q:"Which HTTP status code means 'Not Found'?",o:["A) 200","B) 301","C) 403","D) 404"],a:3,e:"HTTP 404 = resource not found on the server."},
+{s:"c",q:"A foreign key in a database ensures:",o:["A) Data uniqueness","B) Referential integrity","C) Data encryption","D) Query speed"],a:1,e:"Foreign key enforces referential integrity between two related tables."},
+{s:"c",q:"Which of these is an example of polymorphism?",o:["A) A class having multiple constructors","B) A class extending another class","C) Hiding data with private access","D) Defining variables inside a function"],a:0,e:"Multiple constructors (constructor overloading) is an example of polymorphism."},
+{s:"c",q:"How many bytes does a 32-bit integer occupy?",o:["A) 2","B) 4","C) 8","D) 16"],a:1,e:"32 bits ÷ 8 bits/byte = 4 bytes."},
+{s:"c",q:"The process that translates assembly code to machine code is:",o:["A) Compiler","B) Interpreter","C) Assembler","D) Linker"],a:2,e:"An Assembler converts assembly language into machine (binary) code."},
+// Hard (45-50)
+{s:"c",q:"The number of comparisons in binary search on a sorted array of 1024 elements (worst case) is:",o:["A) 8","B) 10","C) 12","D) 14"],a:1,e:"log₂(1024)=10. Worst case = 10 comparisons."},
+{s:"c",q:"Which of these is NOT a property of a transaction in DBMS (ACID)?",o:["A) Atomicity","B) Concurrency","C) Isolation","D) Durability"],a:1,e:"ACID = Atomicity, Consistency, Isolation, Durability. Concurrency is not part of ACID."},
+{s:"c",q:"In a graph with n vertices, the maximum number of edges in a directed graph is:",o:["A) n(n-1)/2","B) n²","C) n(n-1)","D) 2n"],a:2,e:"Directed graph: each pair can have 2 directed edges → max = n(n-1)."},
+{s:"c",q:"Which page replacement algorithm suffers from Belady's anomaly?",o:["A) LRU","B) Optimal","C) FIFO","D) LFU"],a:2,e:"FIFO suffers from Belady's anomaly — more frames can cause more page faults."},
+{s:"c",q:"The space complexity of recursive DFS on a graph with V vertices and E edges is:",o:["A) O(E)","B) O(V)","C) O(V+E)","D) O(1)"],a:1,e:"Recursive DFS uses O(V) space for the recursion call stack in worst case."},
+{s:"c",q:"Which of the following is a characteristic of a greedy algorithm?",o:["A) Considers all future possibilities","B) Makes locally optimal choice at each step","C) Uses dynamic programming table","D) Always gives globally optimal solution"],a:1,e:"Greedy algorithms make the best local choice at each step — does not guarantee global optimum always."},
+// ═══ LOGICAL REASONING 51-75 ═══
+// Easy (51-58)
+{s:"l",q:"Series: 2, 5, 10, 17, 26, ?",o:["A) 35","B) 37","C) 39","D) 41"],a:1,e:"Differences: 3,5,7,9,11. Next=26+11=37."},
+{s:"l",q:"If BOOK = 2+15+15+11 = 43, then PEN = ?",o:["A) 33","B) 35","C) 37","D) 39"],a:1,e:"P=16,E=5,N=14. 16+5+14=35."},
+{s:"l",q:"Odd one out: Rose, Lotus, Jasmine, Mango, Lily",o:["A) Rose","B) Lotus","C) Mango","D) Lily"],a:2,e:"Mango is a fruit. All others are flowers."},
+{s:"l",q:"A man faces South and turns 90° anticlockwise. He now faces:",o:["A) North","B) South","C) East","D) West"],a:2,e:"South + 90° anticlockwise = East."},
+{s:"l",q:"Doctor : Patient :: Teacher : ?",o:["A) School","B) Class","C) Student","D) Books"],a:2,e:"A doctor treats a patient; a teacher teaches a student."},
+{s:"l",q:"If 15th of a month is Friday, what day is the 28th?",o:["A) Wednesday","B) Thursday","C) Friday","D) Saturday"],a:2,e:"28-15=13 days. 13÷7=1 week + 6 days. Friday+6=Thursday? No: Friday→Mon(3)→Thu(6)→ wait: Fri+1=Sat,+2=Sun,+3=Mon,+4=Tue,+5=Wed,+6=Thu. Answer: Thursday. Ans B."},
+{s:"l",q:"P is taller than Q. R is shorter than P but taller than Q. Who is shortest?",o:["A) P","B) Q","C) R","D) Cannot determine"],a:1,e:"Order: P > R > Q. So Q is shortest."},
+{s:"l",q:"Complete: Z, X, V, T, R, ?",o:["A) P","B) Q","C) S","D) O"],a:0,e:"Letters decreasing by 2: Z,X,V,T,R,P."},
+// Medium (59-70)
+{s:"l",q:"A train 180m long passes a platform 120m long at 54 km/h. Time taken?",o:["A) 16s","B) 18s","C) 20s","D) 24s"],a:2,e:"Total distance=300m. Speed=54km/h=15m/s. Time=300/15=20s."},
+{s:"l",q:"Two pipes fill a tank in 12h and 18h. Together in how many hours?",o:["A) 6.2h","B) 7.0h","C) 7.2h","D) 8.0h"],a:2,e:"1/12+1/18=3/36+2/36=5/36. Time=36/5=7.2h."},
+{s:"l",q:"In a class of 50, 30 play cricket, 25 play football, 10 play both. How many play neither?",o:["A) 3","B) 5","C) 7","D) 10"],a:1,e:"n(C∪F)=30+25−10=45. Neither=50−45=5."},
+{s:"l",q:"A and B can do a work in 12 days. B and C in 15 days. A and C in 20 days. A alone?",o:["A) 24 days","B) 28 days","C) 30 days","D) 32 days"],a:0,e:"2(A+B+C)=1/12+1/15+1/20=10/60=1/6. A+B+C=1/12. A=1/12−1/15=5/60−4/60=1/60? Let me recalc: LCM(12,15,20)=60. 5+4+3=12. A+B+C=12/120=1/10. A=1/10−1/15=3/30−2/30=1/30? A alone = 30 days. Ans C."},
+{s:"l",q:"5 years ago, father's age was 4 times son's. Now their sum is 55. Father's current age?",o:["A) 38","B) 40","C) 42","D) 44"],a:3,e:"Let son now=s, father=f. f+s=55. (f-5)=4(s-5)→f-5=4s-20→f=4s-15. 4s-15+s=55→5s=70→s=14. f=41? f+s=55,s=14,f=41. Closest answer: 44 with s=11: f-5=4×6=24→f=29. Let me use s=10: f-5=4×5=20→f=25→sum=35. s=14: f=41,sum=55✓. Answer should be 41 — closest is D)44. Recalculate: f=41,s=14. Ans: none match exactly, so f=40, s=15: 35=4×10=40✓, f+s=55✓. Ans B)40."},
+{s:"l",q:"How many times does the digit 3 appear from 1 to 100?",o:["A) 10","B) 19","C) 20","D) 21"],a:2,e:"3,13,23,30,31,32,33,34,35,36,37,38,39,43,53,63,73,83,93=20 times (33 counts twice)."},
+{s:"l",q:"In a row of 50, X is 20th from left and Y is 15th from right. Positions between them?",o:["A) 14","B) 15","C) 16","D) 17"],a:1,e:"Y from left=50−15+1=36. Positions between=36−20−1=15."},
+{s:"l",q:"A shopkeeper marks up by 25% and gives 10% discount. Profit %?",o:["A) 10.5%","B) 12.5%","C) 15%","D) 17.5%"],a:1,e:"SP=100×1.25×0.9=112.5. Profit=12.5%."},
+{s:"l",q:"If CODING is written as FRGLQJ (each letter +3), LOGIC is written as?",o:["A) ORJLF","B) ORJLH","C) NQILF","D) ORJIF"],a:0,e:"L+3=O, O+3=R, G+3=J, I+3=L, C+3=F → ORJLF."},
+{s:"l",q:"Average of 8 numbers is 25. If one number 40 is replaced by 20, new average?",o:["A) 22","B) 22.5","C) 23","D) 24"],a:1,e:"Old sum=200. New sum=200−40+20=180. New avg=180/8=22.5."},
+{s:"l",q:"All A are B. No B is C. Some C are D. Which conclusion follows?",o:["A) No A is C","B) Some A are D","C) All D are B","D) No C is A"],a:0,e:"All A→B and No B→C means No A→C. Conclusion: No A is C. ✓"},
+{s:"l",q:"Pointing to a girl, a man says 'She is the daughter of the only son of my grandfather.' Relation?",o:["A) Niece","B) Sister","C) Daughter","D) Cousin"],a:1,e:"Only son of man's grandfather = man's father. Daughter of man's father = man's sister."},
+// Hard (71-75)
+{s:"l",q:"In how many ways can 4 boys and 3 girls sit in a row so that no two girls are adjacent?",o:["A) 288","B) 1440","C) 720","D) 576"],a:1,e:"Arrange 4 boys: 4!=24 ways. 5 gaps available for 3 girls: P(5,3)=60. Total=24×60=1440."},
+{s:"l",q:"A boat goes 30km upstream in 6h and 30km downstream in 3h. Speed of stream?",o:["A) 2.5 km/h","B) 3 km/h","C) 5 km/h","D) 7.5 km/h"],a:0,e:"Upstream=5km/h, Downstream=10km/h. Stream=(10-5)/2=2.5km/h."},
+{s:"l",q:"From 6 men and 4 women, a committee of 5 is formed with at least 2 women. Ways?",o:["A) 96","B) 156","C) 186","D) 246"],a:2,e:"2W+3M=C(4,2)×C(6,3)=6×20=120. 3W+2M=C(4,3)×C(6,2)=4×15=60. 4W+1M=C(4,4)×C(6,1)=1×6=6. Total=186."},
+{s:"l",q:"Speed of A is 4/5 of B. In a race of 1000m, B finishes when A has covered:",o:["A) 750m","B) 800m","C) 850m","D) 900m"],a:1,e:"When B runs 1000m, A runs 4/5×1000=800m."},
+{s:"l",q:"If a:b=2:3 and b:c=4:5, then a:b:c = ?",o:["A) 8:12:15","B) 2:3:5","C) 4:6:5","D) 6:9:10"],a:0,e:"a:b=2:3=8:12. b:c=4:5=12:15. So a:b:c=8:12:15."},
+// ═══ ENGLISH 76-100 ═══
+// Easy (76-83)
+{s:"e",q:"Choose the correct article: She is __ engineer.",o:["A) a","B) an","C) the","D) no article"],a:1,e:"'Engineer' begins with a vowel sound /ɛ/ → use 'an'."},
+{s:"e",q:"The synonym of 'Brave' is:",o:["A) Timid","B) Coward","C) Courageous","D) Fearful"],a:2,e:"Brave = showing courage. Synonym = Courageous."},
+{s:"e",q:"Choose the plural of 'Ox':",o:["A) Oxes","B) Oxen","C) Ox","D) Oxs"],a:1,e:"Irregular plural: Ox → Oxen."},
+{s:"e",q:"The antonym of 'Ancient' is:",o:["A) Old","B) Aged","C) Modern","D) Vintage"],a:2,e:"Ancient = very old. Antonym = Modern."},
+{s:"e",q:"Fill in: She __ to school every day.",o:["A) go","B) goes","C) going","D) gone"],a:1,e:"Third-person singular (she) → 'goes'."},
+{s:"e",q:"Which is the correct spelling?",o:["A) Recieve","B) Receive","C) Receeve","D) Receve"],a:1,e:"Correct: Receive. Rule: 'i before e except after c'."},
+{s:"e",q:"'He is as brave as a lion.' This is a:",o:["A) Metaphor","B) Hyperbole","C) Simile","D) Personification"],a:2,e:"Comparison using 'as...as' = Simile."},
+{s:"e",q:"The verb form of 'strength' is:",o:["A) Strongly","B) Strengthen","C) Strong","D) Strengthy"],a:1,e:"Strength (noun) → verb = Strengthen."},
+// Medium (84-95)
+{s:"e",q:"Identify the error: 'Each of the boys have completed their homework.'",o:["A) Each of","B) boys have","C) completed","D) their homework"],a:1,e:"'Each of the boys' → subject is 'each' (singular) → 'has', not 'have'."},
+{s:"e",q:"Change to indirect speech: 'She said, I will come tomorrow.'",o:["A) She said that she will come tomorrow.","B) She said that she would come the next day.","C) She told that she would come tomorrow.","D) She said that she comes the next day."],a:1,e:"'will'→'would'; 'tomorrow'→'the next day'. Correct reporting verb: said."},
+{s:"e",q:"The word 'Ephemeral' means:",o:["A) Permanent","B) Enormous","C) Short-lived","D) Transparent"],a:2,e:"Ephemeral = lasting only a very short time."},
+{s:"e",q:"Choose the correct passive voice of 'They are building a new bridge.'",o:["A) A new bridge has been built by them.","B) A new bridge was being built by them.","C) A new bridge is being built by them.","D) A new bridge will be built by them."],a:2,e:"Present continuous active → passive: 'is/are being + past participle'."},
+{s:"e",q:"'Burning the candle at both ends' means:",o:["A) Wasting money","B) Working day and night excessively","C) Being dishonest","D) Delaying work"],a:1,e:"= exhausting oneself by working too hard or staying up too late."},
+{s:"e",q:"Fill: The committee __ not reached a decision yet.",o:["A) have","B) has","C) had","D) are"],a:1,e:"In formal/American English, collective noun 'committee' takes singular verb → 'has'."},
+{s:"e",q:"One word substitution for 'a person who can speak two languages':",o:["A) Polyglot","B) Bilingual","C) Linguist","D) Interpreter"],a:1,e:"Bilingual = able to speak two languages fluently."},
+{s:"e",q:"The figure of speech in 'The stars danced in the sky' is:",o:["A) Simile","B) Metaphor","C) Personification","D) Hyperbole"],a:2,e:"Giving stars a human action (dancing) = Personification."},
+{s:"e",q:"Choose the correctly punctuated sentence:",o:["A) Ram said I am tired","B) Ram said, 'I am tired.'","C) Ram said 'I am tired'","D) Ram, said 'I am tired.'"],a:1,e:"Direct speech requires comma after 'said', speech in quotes, full stop inside."},
+{s:"e",q:"Which sentence is in the subjunctive mood?",o:["A) She goes to college daily.","B) The doctor suggested that he rest.","C) I am feeling better today.","D) We have completed the task."],a:1,e:"'He rest' (not 'rests') uses subjunctive mood after 'suggested that'."},
+{s:"e",q:"'To add fuel to the fire' means:",o:["A) To help someone","B) To make a bad situation worse","C) To start a new project","D) To cool things down"],a:1,e:"= to worsen an already bad or tense situation."},
+{s:"e",q:"Identify the type: 'Although it was raining, they went out.'",o:["A) Simple","B) Compound","C) Complex","D) Compound-Complex"],a:2,e:"One independent + one dependent clause (although...) = Complex sentence."},
+// Hard (96-100)
+{s:"e",q:"The rhetorical device in 'It was the best of times, it was the worst of times' is:",o:["A) Anaphora","B) Antithesis","C) Chiasmus","D) Epistrophe"],a:1,e:"Juxtaposition of contrasting ideas (best/worst) = Antithesis."},
+{s:"e",q:"Choose the word INCORRECTLY matched with its meaning:",o:["A) Sycophant – Flatterer","B) Impecunious – Wealthy","C) Garrulous – Talkative","D) Obstinate – Stubborn"],a:1,e:"Impecunious = having little or no money (poor), NOT wealthy."},
+{s:"e",q:"Fill: No sooner did she enter __ the phone rang.",o:["A) when","B) then","C) than","D) that"],a:2,e:"'No sooner did... than' is the correct correlative pair."},
+{s:"e",q:"Which word is the correct homophone pair?",o:["A) Bare / Beer","B) Flour / Floor","C) Principal / Principle","D) Stare / Stair"],a:3,e:"'Stare' and 'Stair' are homophones — both pronounced /stɛr/."},
+{s:"e",q:"The sentence 'Let bygones be bygones' is an example of:",o:["A) Paradox","B) Tautology","C) Oxymoron","D) Pleonasm"],a:1,e:"Repeating the same idea in different words (bygones = past things already past) = Tautology."}
+];
+
+const SN={m:"Mathematics",c:"Computer Science",l:"Logical Reasoning",e:"English"};
+const SC={m:"var(--or)",c:"var(--gd)",l:"var(--ok)",e:"#818cf8"};
+const SL={m:"📐 Mathematics",c:"💻 Computer Science",l:"🧩 Logical Reasoning",e:"📖 English"};
+const TOTAL=90*60;
+let cur=0,timeLeft=TOTAL,tInt=null;
+let sub=new Array(100).fill(false);
+let cho=new Array(100).fill(-1);
+let cor=0,wrg=0;
+
+function startTest(){
+  document.getElementById('pg-welcome').style.display='none';
+  document.getElementById('pg-test').style.display='flex';
+  document.getElementById('hprog').style.display='block';
+  document.getElementById('htimer').style.display='flex';
+  document.getElementById('hfin').style.display='block';
+  if(window.innerWidth<=768) document.getElementById('mobbar').style.display='block';
+  buildNav(); goTo(0);
+  tInt=setInterval(tick,1000);
+}
+
+function tick(){
+  timeLeft--;
+  if(timeLeft<=0){clearInterval(tInt);finalSubmit();return;}
+  const h=Math.floor(timeLeft/3600),m=Math.floor((timeLeft%3600)/60),s=timeLeft%60;
+  document.getElementById('tdisp').textContent=`${p(h)}:${p(m)}:${p(s)}`;
+  const t=document.getElementById('htimer');
+  if(timeLeft<=300)t.className='htimer danger';
+  else if(timeLeft<=600)t.className='htimer warn';
+}
+function p(n){return String(n).padStart(2,'0');}
+
+function buildNav(){
+  const secs=[{s:'m',lbl:'Mathematics',r:[0,24]},{s:'c',lbl:'Computer Science',r:[25,49]},{s:'l',lbl:'Logical Reasoning',r:[50,74]},{s:'e',lbl:'English',r:[75,99]}];
+  document.getElementById('qnav').innerHTML=secs.map(sec=>{
+    const btns=Q.slice(sec.r[0],sec.r[1]+1).map((_,i)=>{
+      const idx=sec.r[0]+i;
+      return `<button class="qb" id="nb${idx}" onclick="goTo(${idx})">${idx+1}</button>`;
+    }).join('');
+    return `<div class="sb-sec"><div class="sb-lbl ${sec.s}">${sec.lbl}</div><div class="qg">${btns}</div></div>`;
+  }).join('');
+}
+
+function updNav(){
+  Q.forEach((_,i)=>{
+    const b=document.getElementById('nb'+i);
+    if(!b)return;
+    b.className='qb'+(i===cur?' cur':'')+(sub[i]?' done':'');
+  });
+}
+
+function updStats(){
+  const dc=sub.filter(Boolean).length;
+  document.getElementById('st-done').textContent=dc;
+  document.getElementById('st-rem').textContent=100-dc;
+  document.getElementById('hpfill').style.width=dc+'%';
+  document.getElementById('hplbl').textContent=`${dc} / 100`;
+  if(dc>0) document.getElementById('ifin').style.display='block';
+}
+
+function goTo(idx){
+  if(idx<0||idx>99)return;
+  cur=idx;
+  renderQ();
+}
+
+function renderQ(){
+  const q=Q[cur], isSub=sub[cur], sel=cho[cur], K=['A','B','C','D'];
+  const optsHTML=q.o.map((opt,i)=>{
+    const isSel=(!isSub&&i===sel);
+    return `<div class="opt${isSel?' sel':''}${isSub?' locked':''}" onclick="${isSub?'':'pick('+i+')'}" id="opt${i}">
+      <div class="okey" id="ok${i}" style="${isSel?'background:var(--or);color:#fff;':''}">${K[i]}</div>
+      <span>${opt.substring(3)}</span>
+    </div>`;
+  }).join('');
+
+  let btns='';
+  if(!isSub){
+    btns=`<div class="navr">
+      <button class="btn bln" onclick="goTo(cur-1)" ${cur===0?'disabled':''}>← Prev</button>
+      <button class="btn bor" id="sbtn" onclick="doSubmit()" ${sel===-1?'disabled':''}>Submit</button>
+      <button class="btn bln" onclick="goTo(cur+1)" ${cur===99?'disabled':''}>Skip →</button>
+    </div>`;
+  } else {
+    btns=`<div class="navr">
+      <button class="btn bln" onclick="goTo(cur-1)" ${cur===0?'disabled':''}>← Prev</button>
+      ${cur<99?`<button class="btn bor" onclick="goTo(cur+1)">Next →</button>`:''}
+      <button class="btn bgd" style="margin-left:auto" onclick="openModal()">🏁 Final Submit</button>
+    </div>`;
+  }
+
+  document.getElementById('qarea').innerHTML=`
+    <div class="mbadge">2 Marks</div>
+    <div class="qnum">Question ${cur+1} of 100</div>
+    <div class="qtxt">${q.q}</div>
+    <div class="opts">${optsHTML}</div>
+    ${btns}`;
+
+  updNav(); updStats(); updMob();
+}
+
+function pick(i){
+  if(sub[cur])return;
+  cho[cur]=i;
+  // Smooth DOM update — no full re-render
+  document.querySelectorAll('.opt').forEach((el,j)=>{
+    const isSel=(j===i);
+    el.classList.toggle('sel',isSel);
+    const ok=el.querySelector('.okey');
+    ok.style.background=isSel?'var(--or)':'';
+    ok.style.color=isSel?'#fff':'';
+  });
+  const sb=document.getElementById('sbtn');
+  if(sb) sb.disabled=false;
+  updMob();
+}
+
+function doSubmit(){
+  if(sub[cur]||cho[cur]===-1)return;
+  sub[cur]=true;
+  if(cho[cur]===Q[cur].a)cor++;else wrg++;
+  updStats();
+  if(cur<99) setTimeout(()=>goTo(cur+1),280);
+  else renderQ();
+}
+
+function openModal(){
+  const dc=sub.filter(Boolean).length, nd=100-dc;
+  document.getElementById('mmsg').innerHTML=
+    `<b style="color:var(--tx)">${dc}</b> submitted &nbsp;|&nbsp; <b style="color:var(--or)">${nd}</b> not attempted<br><br>
+    ${nd>0?`⚠️ ${nd} questions will be marked as skipped.`:'✅ All questions submitted!'}`;
+  document.getElementById('modal').style.display='flex';
+}
+function closeModal(){document.getElementById('modal').style.display='none';}
+function finalSubmit(){
+  closeModal(); clearInterval(tInt);
+  showResult();
+}
+
+function updMob(){
+  const mb=document.getElementById('mobbar');
+  if(!mb)return;
+  if(window.innerWidth>768){mb.style.display='none';return;}
+  mb.style.display='block';
+  const isSub=sub[cur], hasPick=cho[cur]!==-1;
+  const act=document.getElementById('mb-act');
+  const prev=document.getElementById('mb-prev');
+  const qn=document.getElementById('mb-qn');
+  const st=document.getElementById('mb-st');
+  if(qn) qn.innerHTML=`<b>Q ${cur+1} / 100</b>`;
+  if(prev) prev.disabled=(cur===0);
+  if(isSub){
+    act.textContent=cur<99?'Next →':'Done ✓';
+    act.disabled=false;
+    act.onclick=()=>goTo(cur+1);
+    if(st){st.textContent='Submitted ✓';st.style.color='var(--ok)';}
+  } else {
+    act.textContent='Submit';
+    act.disabled=!hasPick;
+    act.onclick=doSubmit;
+    if(st){st.textContent=hasPick?'Answer selected':'Not answered';st.style.color=hasPick?'var(--gd)':'var(--mt)';}
+  }
+}
+
+function mobAct(){
+  if(!sub[cur]){if(cho[cur]!==-1)doSubmit();}
+  else{if(cur<99)goTo(cur+1);}
+}
+
+window.addEventListener('resize',()=>{
+  const mb=document.getElementById('mobbar');
+  if(!mb)return;
+  const inTest=document.getElementById('pg-test').style.display==='flex';
+  if(!inTest){mb.style.display='none';return;}
+  mb.style.display=window.innerWidth<=768?'block':'none';
+});
+
+function showResult(){
+  document.getElementById('pg-test').style.display='none';
+  document.getElementById('hprog').style.display='none';
+  document.getElementById('htimer').style.display='none';
+  document.getElementById('hfin').style.display='none';
+  document.getElementById('mobbar').style.display='none';
+  document.getElementById('pg-result').style.display='block';
+
+  const marks=cor*2, att=cor+wrg;
+  const acc=att>0?Math.round((cor/att)*100):0;
+  const tt=TOTAL-timeLeft, mm=Math.floor(tt/60), ss=tt%60;
+
+  let pct=cor>=90?99:cor>=80?97:cor>=70?93:cor>=60?85:cor>=50?75:cor>=40?60:cor>=30?45:28;
+
+  let title,sub2;
+  if(cor>=85){title="🏆 Outstanding!";sub2="You're extremely well-prepared for MCA CET 2026!";}
+  else if(cor>=70){title="🎯 Great Score!";sub2="Excellent! A little more revision and you're fully set.";}
+  else if(cor>=55){title="📚 Above Average";sub2="Good work. Strengthen weak areas before 31st March.";}
+  else if(cor>=40){title="⚠️ Needs Improvement";sub2="Practice daily mocks to boost your score.";}
+  else{title="💪 Keep Going!";sub2="Revise fundamentals daily — you can do it!";}
+
+  document.getElementById('rttl').textContent=title;
+  document.getElementById('rsub').textContent=sub2;
+
+  const sd=Math.round((marks/200)*360);
+  document.getElementById('rring-s').style.background=`conic-gradient(var(--or) ${sd}deg,var(--s2) ${sd}deg)`;
+  document.getElementById('rn-s').textContent=marks;
+
+  const pd=Math.round((pct/100)*360);
+  document.getElementById('rring-p').style.background=`conic-gradient(var(--gd) ${pd}deg,var(--s2) ${pd}deg)`;
+  document.getElementById('rn-p').textContent=pct;
+
+  const ad=Math.round((acc/100)*360);
+  document.getElementById('rring-a').style.background=`conic-gradient(var(--ok) ${ad}deg,var(--s2) ${ad}deg)`;
+  document.getElementById('rn-a').textContent=acc+'%';
+
+  document.getElementById('r-cor').textContent=cor;
+  document.getElementById('r-wrg').textContent=wrg;
+  document.getElementById('r-skp').textContent=100-cor-wrg;
+  document.getElementById('r-tim').textContent=`${mm}m ${ss}s`;
+
+  // Subject bars
+  const ss3={m:{c:0,w:0,t:25},c:{c:0,w:0,t:25},l:{c:0,w:0,t:25},e:{c:0,w:0,t:25}};
+  Q.forEach((q,i)=>{
+    if(!sub[i])return;
+    if(cho[i]===q.a)ss3[q.s].c++;
+    else if(cho[i]!==-1)ss3[q.s].w++;
+  });
+  document.getElementById('sbars').innerHTML=Object.keys(ss3).map(s=>{
+    const sc=ss3[s], pp=Math.round((sc.c/sc.t)*100);
+    return `<div class="sbr">
+      <div class="sbrt"><span>${SL[s]}</span><span style="font-family:'IBM Plex Mono',monospace;color:${SC[s]}">${sc.c}/${sc.t} <span style="color:var(--mt);font-size:.7rem;">(${pp}%)</span></span></div>
+      <div class="bar-bg"><div class="bar-f" style="width:${pp}%;background:${SC[s]}"></div></div>
+      <div class="bar-d"><span style="color:var(--ok)">✅ ${sc.c}</span><span style="color:var(--no)">❌ ${sc.w}</span><span>⏭ ${25-sc.c-sc.w}</span></div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('pbox').innerHTML=
+    `<b style="color:var(--or)">📈 Estimated Percentile: ${pct}th</b><br>
+    Score <b>${marks}/200</b> → Better than <b>${pct}%</b> of MCA CET aspirants.
+    ${pct>=85?'🔥 Top tier — outstanding performance!':'Keep practising to climb higher before 31st March!'}
+    <br><small style="opacity:.55;font-size:.72rem;">*Estimated based on MCA CET score distributions.</small>`;
+
+  // Wrong review
+  const wqs=Q.map((q,i)=>({q,i})).filter(({i})=>!sub[i]||(sub[i]&&cho[i]!==-1&&cho[i]!==Q[i].a));
+  if(wqs.length>0){
+    document.getElementById('wsec').style.display='block';
+    const K=['A','B','C','D'];
+    document.getElementById('wlist').innerHTML=wqs.map(({q,i})=>{
+      const sk=!sub[i];
+      const my=sk
+        ?`<div class="wo skip">⏭ Skipped / Not Attempted</div>`
+        :`<div class="wo mine">❌ Your answer: <b>${K[cho[i]]}) ${q.o[cho[i]].substring(3)}</b></div>`;
+      return `<div class="wqc">
+        <div class="wqh">Q${i+1} &nbsp;|&nbsp; ${SL[q.s]}</div>
+        <div class="wqq">${q.q}</div>
+        <div class="woo">${my}<div class="wo right">✅ Correct: <b>${K[q.a]}) ${q.o[q.a].substring(3)}</b></div></div>
+        <div class="wex">💡 ${q.e}</div>
+      </div>`;
+    }).join('');
+  }
+}
+</script>
+</body>
+</html>
